@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "name": "Subcategory1",
+        "parent_category_id": 4
+
+    },
+    {
+        "id": 2,
+        "name": "Subcategory2",
+        "parent_category_id": 4
+
+    },
+    {
+        "id": 3,
+        "name": "Subcategory3",
+        "parent_category_id": 5
+
+    },
+    {
+        "id": 6,
+        "name": "Subcategory4",
+        "parent_category_id": 5
+
+    },
+    {
+        "id": 4,
+        "name": "ParentCategory",
+        "parent_category_id": null
+
+    },
+    {
+        "id": 5,
+        "name": "ParentCategory2",
+        "parent_category_id": null
+
+    }
+
+]
