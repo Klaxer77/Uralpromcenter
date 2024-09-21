@@ -15,6 +15,9 @@ from app.config import settings
 from redis import asyncio as aioredis
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.utils.limiter import limiter
 
 openapi_url=None
 redoc_url=None
@@ -29,6 +32,8 @@ app = FastAPI(
     openapi_url=openapi_url, 
     redoc_url=redoc_url
     )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(product_router)
 app.include_router(news_router)
