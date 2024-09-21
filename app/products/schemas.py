@@ -29,6 +29,10 @@ class SProductsList(BaseModel):
     name: str
     img: str
     subcategories: List[SSubcategory] = [] 
+    
+class SProductSearch(BaseModel):
+    name: str
+    img: str
 
     
     

@@ -23,11 +23,11 @@ class ProductDAO(BaseDAO):
             return result.scalars().all()
         
     @classmethod
-    async def get_products_all(cls):
+    async def get_products_all(cls,limit: int):
         async with async_session_maker() as session:
             query = select(Products).options(
                 selectinload(Products.subcategories).options(selectinload(Categories.parent_category))
-            )
+            ).limit(limit)
             result = await session.execute(query)
             result_orm = result.scalars().all()
 
@@ -110,7 +110,6 @@ class ProductDAO(BaseDAO):
             )
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
-            print(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)
             result_orm = result.scalars().all()
 

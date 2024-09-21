@@ -20,4 +20,8 @@ class NumberError(BaseException):
     
 class ValueLenError(BaseException):
     status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-    detail = "Слишком много символов"
+    detail = "Слишком много символов в имени"
+    
+class ValueLenCommentError(BaseException):
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+    detail = "Слишком большой комментарий"

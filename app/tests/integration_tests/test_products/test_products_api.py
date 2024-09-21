@@ -3,16 +3,24 @@ from pydantic import ValidationError
 import pytest
 from httpx import AsyncClient
 
-from app.products.schemas import SCategory, SProductsList, SSubcategory
+from app.products.schemas import SCategory, SProductSearch, SProductsList, SSubcategory
 
 
 #1
-async def test_get_all(ac: AsyncClient):
-    response = await ac.get("/api/product/all")
+@pytest.mark.parametrize("limit",[
+    (1),
+    (2),
+    (3)
+])
+async def test_get_all(limit:int, ac: AsyncClient):
+    response = await ac.get("/api/product/all", params={
+        "limit":limit
+    })
     products = response.json()
     
     assert response.status_code == 200
     assert products
+    assert len(products) == limit
     
     for product in products:
             try:
@@ -140,4 +148,41 @@ async def test_get_products_in_category(parent_category_id: int, is_exists: bool
             except TypeError as e:
                 assert False, f"Type Error: {e}"
     else: 
+        assert products == []
+        
+        
+#4       
+@pytest.mark.parametrize("product_name,is_exists",[
+    ("Продукт1",True),
+    ("Продукт2",True),
+    ("Продукт",True),
+    ("П",True),
+    ("П",True),
+    ("Й",False),
+    ("нанана",False)
+])        
+async def test_product_search(product_name: str, is_exists: bool, ac: AsyncClient):
+    response = await ac.get("/api/product/search", params={
+        "product_name": product_name
+    })
+    
+    products = response.json()
+    assert response.status_code == 200
+    
+    if is_exists:
+        assert response
+        assert products
+        
+        for product in products:
+            product_data = {
+                    "name": product["name"],
+                    "img": product["img"]
+                    }
+        
+        product_schem = SProductSearch(**product_data)
+        
+        assert isinstance(product_schem.name, str)
+        assert isinstance(product_schem.img, str)
+    
+    else:
         assert products == []

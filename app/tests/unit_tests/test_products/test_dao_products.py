@@ -1,15 +1,22 @@
 import pytest
 from uuid import UUID
 from pydantic import ValidationError
-from app.products.schemas import SProductsList, SCategory, SSubcategory
+from app.products.schemas import SProductSearch, SProductsList, SCategory, SSubcategory
 from app.products.dao import ProductDAO
 
 
 #1
-async def test_get_products_all():
-    products = await ProductDAO.get_products_all()
+@pytest.mark.parametrize("limit",[
+    (1),
+    (2),
+    (3),
+])
+async def test_get_products_all(limit:int):
+    products = await ProductDAO.get_products_all(limit=limit)
     
     assert products
+    
+    assert len(products) == limit
     
     for product in products:
         try:
@@ -136,6 +143,36 @@ async def test_find_many_in_parent_category(parent_category_id: int, is_exists: 
             except TypeError as e:
                 assert False, f"Type Error: {e}"
     else: 
+        assert products == []
+        
+#4
+@pytest.mark.parametrize("product_name,is_exists",[
+    ("Продукт1",True),
+    ("Продукт2",True),
+    ("Продукт",True),
+    ("П",True),
+    ("П",True),
+    ("Й",False),
+    ("нанана",False)
+])
+async def test_product_search(product_name: str, is_exists: bool):
+    products = await ProductDAO.search(product_name=product_name)
+    
+    if is_exists:
+        assert products
+        
+        for product in products:
+            product_data = {
+                    "name": product.name,
+                    "img": product.img
+                    }
+        
+        product_schem = SProductSearch(**product_data)
+        
+        assert isinstance(product_schem.name, str)
+        assert isinstance(product_schem.img, str)
+    
+    else:
         assert products == []
         
 

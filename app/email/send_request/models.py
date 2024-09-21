@@ -12,3 +12,6 @@ class SendRequest(Base):
     organization = Column(String(15), nullable=False)
     email = Column(String(255), nullable=False)
     message = Column(Text, nullable=False)
+    
+    def __str__(self) -> str:
+        return f"Зявка от {self.organization}"

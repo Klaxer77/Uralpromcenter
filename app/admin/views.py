@@ -5,10 +5,30 @@ from app.products.models import Products  #noqa
 from app.news.models import News  #noqa
 from app.recall.models import Recall  #noqa
 from app.progress.models import Progress  #noqa
+from app.email.send_request.models import SendRequest  #noqa
+from app.email.order_call.models import OrderCall  #noqa
 
 
 #Нельзя автоматизировать процесс добавления картинки в хранилище S3
 
+
+class SendRequestAdmin(ModelView, model=SendRequest):
+    column_list = [c.name for c in SendRequest.__table__.c]
+    can_delete = False
+    can_edit = False
+    can_create = False
+    name = "Заявка"
+    name_plural = "Заявки"
+    icon = "fa-solid fa-code-pull-request"
+    
+class OrderCallAdmin(ModelView, model=OrderCall):
+    column_list = [c.name for c in OrderCall.__table__.c]
+    can_delete = False
+    can_edit = False
+    can_create = False
+    name = "Заказ звонка"
+    name_plural = "Заказы на звонки"
+    icon = "fa-solid fa-phone"
 
 class UsersAdmin(ModelView, model=Users):
     column_list = [Users.id, Users.email]

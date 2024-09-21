@@ -1,10 +1,11 @@
 from fastapi import APIRouter
 
-from app.recall.dao import RecallDAO
+from app.progress.dao import ProgressDAO
+from app.progress.schemas import ProgressList
 
 router = APIRouter(prefix="/progress", tags=["Достижения"])
 
 @router.get("/all")
-async def get_all():
-    get_progress = await RecallDAO.find_all()
+async def get_all() -> list[ProgressList]:
+    get_progress = await ProgressDAO.find_all()
     return get_progress

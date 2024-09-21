@@ -10,7 +10,7 @@ from app.email.send_request.router import router as sendrequest_router
 from sqladmin import Admin
 from app.database import engine
 from app.admin.auth import authentication_backend
-from app.admin.views import ProgressAdmin, RecallAdmin, UsersAdmin, CategoriesAdmin, NewsAdmin, ProductsAdmin
+from app.admin.views import OrderCallAdmin, ProgressAdmin, RecallAdmin, SendRequestAdmin, UsersAdmin, CategoriesAdmin, NewsAdmin, ProductsAdmin
 from app.config import settings
 from redis import asyncio as aioredis
 from fastapi_cache import FastAPICache
@@ -71,3 +71,5 @@ admin.add_view(CategoriesAdmin)
 admin.add_view(NewsAdmin)
 admin.add_view(RecallAdmin)
 admin.add_view(ProgressAdmin)
+admin.add_view(SendRequestAdmin)
+admin.add_view(OrderCallAdmin)

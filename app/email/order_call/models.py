@@ -10,5 +10,8 @@ class OrderCall(Base):
     number = Column(String(15), nullable=False)
     comment = Column(String(255), nullable=False)
     
+    def __str__(self) -> str:
+        return f"Зявка от {self.name}"
+    
     
 
