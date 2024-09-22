@@ -10,6 +10,7 @@ class News(Base):
     name = Column(String(255), nullable=False)
     title = Column(Text, nullable=False)
     text = Column(Text, nullable=False)
+    img = Column(String(255), nullable=False)
     created_at = Column(
         Date, default=date.today, server_default=func.current_date(), nullable=False
     )

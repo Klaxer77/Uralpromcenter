@@ -24,6 +24,7 @@ async def test_get_all(ac: AsyncClient):
             assert isinstance(news_schem.name, str)
             assert isinstance(news_schem.title, str)
             assert isinstance(news_schem.text, str)
+            assert isinstance(news_schem.img, str)
             assert isinstance(news_schem.created_at, str)
             
     except ValidationError as e:

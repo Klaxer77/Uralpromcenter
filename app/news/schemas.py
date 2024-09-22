@@ -6,6 +6,7 @@ class NewsList(BaseModel):
     name: str
     title: str
     text: str
+    img: str
     created_at: date
     
     @field_validator("created_at")
