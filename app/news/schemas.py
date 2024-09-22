@@ -4,7 +4,6 @@ from datetime import date
 class NewsList(BaseModel):
     id: int
     name: str
-    title: str
     text: str
     img: str
     created_at: date

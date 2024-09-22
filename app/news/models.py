@@ -8,7 +8,6 @@ class News(Base):
     
     id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String(255), nullable=False)
-    title = Column(Text, nullable=False)
     text = Column(Text, nullable=False)
     img = Column(String(255), nullable=False)
     created_at = Column(

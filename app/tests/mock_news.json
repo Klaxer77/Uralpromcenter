@@ -2,7 +2,6 @@
     {
         "id": 1,
         "name": "News-name1",
-        "title": "News-title1",
         "text": "News-text1",
         "img": "img1",
         "created_at": "04-06-2024"
@@ -10,7 +9,6 @@
     {
         "id": 2,
         "name": "News-name2",
-        "title": "News-title2",
         "text": "News-text2",
         "img": "img2",
         "created_at": "04-07-2024"
@@ -18,7 +16,6 @@
     {
         "id": 3,
         "name": "News-name3",
-        "title": "News-title3",
         "text": "News-text3",
         "img": "img1",
         "created_at": "23-06-2023"
