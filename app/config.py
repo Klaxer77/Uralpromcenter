@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     SMTP_PORT: str
     SMTP_USER: str
     SMTP_PASS: str
+    
+    SENTRY_DSN: str
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

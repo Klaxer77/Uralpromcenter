@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 from app.products.router import router as product_router
 from app.news.router import router as news_router
 from app.users.router import router_auth as auth_user_router
@@ -18,6 +19,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from app.utils.limiter import limiter
+import sentry_sdk
 
 openapi_url=None
 redoc_url=None
@@ -25,6 +27,14 @@ redoc_url=None
 if settings.MODE in ["DEV","TEST"]:
     openapi_url="/openapi.json"
     redoc_url="/redoc"
+
+if settings.MODE == "PROD":
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        traces_sample_rate=1.0,
+        profiles_sample_rate=1.0,
+    )
+
 
 app = FastAPI(
     title="Сайт ASK-BP",
@@ -67,6 +77,13 @@ if settings.MODE == "TEST":
 def startup():
     redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
+    
+# Подключение Прометеуса
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"],
+)
+instrumentator.instrument(app).expose(app)
 
 # Подключение админки
 admin = Admin(app, engine, authentication_backend=authentication_backend)
