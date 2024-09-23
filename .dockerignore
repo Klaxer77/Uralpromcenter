@@ -1,0 +1,9 @@
+tests
+./app/tests
+.pytest_cache
+conftest.py
+./app/conftest.py
+pytest.ini
+.test.env
+
+grafana-dashboard.json
