@@ -2,7 +2,7 @@ version: "3.8"
 services:
   db:
     image: postgres:15
-    container_name: ask-bp_db
+    container_name: ask-bp_db_dev
     volumes:
       - postgresdata:/var/lib/postgresql/data
     env_file:
@@ -10,11 +10,11 @@ services:
     ports:
       - 5432:5432
 
-  ask-bp_app:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ask-bp_app
+    container_name: ask-bp_app_dev
     env_file:
       - .env.docker
     depends_on:
@@ -26,7 +26,7 @@ services:
 
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.3.1
-    container_name: node_exporter
+    container_name: ask-bp_node_exporter_dev
     command:
       - '--path.rootfs=/host'
     pid: host
@@ -34,11 +34,11 @@ services:
     volumes:
       - '/:/host:ro,rslave'
     ports:
-      - "9100:9100"
+      - 9100:9100
 
   prometheus:
     image: prom/prometheus:v2.43.0
-    container_name: prometheus
+    container_name: ask-bp_prometheus_dev
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheusdata:/prometheus
@@ -48,7 +48,7 @@ services:
 
   grafana:
     image: grafana/grafana:9.4.7
-    container_name: grafana
+    container_name: ask-bp_grafana_dev
     volumes:
       - grafanadata:/var/lib/grafana
     restart: unless-stopped
@@ -57,15 +57,15 @@ services:
 
   redis:
     image: redis:7
-    container_name: ask-bp_redis
+    container_name: ask-bp_redis_dev
     ports:
       - 6379:6379
 
   celery:
-    image: ask-bp_celery
+    image: ask-bp_celery_dev
     build:
       context: .
-    container_name: ask-bp_celery
+    container_name: ask-bp_celery_dev
     command: sh -c "celery --app=app.tasks.celery:celery worker -l INFO"
     env_file:
       - .env.docker

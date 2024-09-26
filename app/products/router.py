@@ -10,19 +10,14 @@ from app.logger import logger
 
 router = APIRouter(prefix="/product", tags=["Продукты"])
 
-@router.get("/all")
-async def get_all(limit: int) -> list[SProductsList]:
-    get_products = await ProductDAO.get_products_all(limit=limit)
-    return get_products
-
 @router.get("/subcategory/{subcategory_id}")
-async def get_products_in_subcategory(subcategory_id: int) -> list[SProductsList]:
-    get_products = await ProductDAO.find_many_in_subcategory(subcategory_id=subcategory_id)
+async def get_products_in_subcategory(subcategory_id: int, limit: int) -> list[SProductsList]:
+    get_products = await ProductDAO.find_many_in_subcategory(subcategory_id=subcategory_id, limit=limit)
     return get_products
 
 @router.get("/parent_category/{parent_category_id}")
-async def get_products_in_category(parent_category_id: int) -> list[SProductsList]:
-    get_products = await ProductDAO.find_many_in_parent_category(parent_category_id=parent_category_id)
+async def get_products_in_category(parent_category_id: int, limit: int) -> list[SProductsList]:
+    get_products = await ProductDAO.find_many_in_parent_category(parent_category_id=parent_category_id, limit=limit)
     return get_products
 
 @router.get("/search")

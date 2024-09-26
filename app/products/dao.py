@@ -23,123 +23,30 @@ class ProductDAO(BaseDAO):
             return result.scalars().all()
         
     @classmethod
-    async def get_products_all(cls,limit: int):
+    async def find_many_in_subcategory(cls, subcategory_id: int, limit: int):
         async with async_session_maker() as session:
-            query = select(Products).options(
-                selectinload(Products.subcategories).options(selectinload(Categories.parent_category))
-            ).limit(limit)
-            result = await session.execute(query)
-            result_orm = result.scalars().all()
-
-            result_dto = []
-            for row in result_orm:
-                subcategories = []
-                
-                for category in row.subcategories:
-                    parent_category = None
-                    if category.parent_category:
-                        parent_category = SCategory(
-                            id=category.parent_category.id,
-                            name=category.parent_category.name
-                        )
-
-                    subcategories.append(SSubcategory(
-                        id=category.id,
-                        name=category.name,
-                        parent_category=parent_category
-                    ))
-
-                product_dto = SProductsList(
-                    id=row.id,
-                    name=row.name,
-                    img=row.img,
-                    subcategories=subcategories
-                )
-                result_dto.append(product_dto)
-
-            return result_dto
-        
-    @classmethod
-    async def find_many_in_subcategory(cls, subcategory_id: int):
-        async with async_session_maker() as session:
-            query = select(Products).options(
-                selectinload(Products.subcategories)
-                .options(selectinload(Categories.parent_category))
-            ).join(products_categories).where(products_categories.c.category_id == subcategory_id)
+            query = select(Products).join(products_categories).where(
+                products_categories.c.category_id == subcategory_id
+                ).limit(limit)
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)
-            result_orm = result.scalars().all()
-
-            result_dto = []
-            for row in result_orm:
-                subcategories = []
-                
-                for category in row.subcategories:
-                    parent_category = None
-                    if category.parent_category:
-                        parent_category = SCategory(
-                            id=category.parent_category.id,
-                            name=category.parent_category.name
-                        )
-
-                    subcategories.append(SSubcategory(
-                        id=category.id,
-                        name=category.name,
-                        parent_category=parent_category
-                    ))
-
-                product_dto = SProductsList(
-                    id=row.id,
-                    name=row.name,
-                    img=row.img,
-                    subcategories=subcategories
-                )
-                result_dto.append(product_dto)
-
-            return result_dto
+            return result.scalars().all()
 
             
     @classmethod
-    async def find_many_in_parent_category(cls, parent_category_id: int):
+    async def find_many_in_parent_category(cls, parent_category_id: int, limit: int):
         async with async_session_maker() as session:
             query = select(Products).options(
                 selectinload(Products.subcategories).options(selectinload(Categories.parent_category))
             ).join(products_categories).join(Categories).where(
                 Categories.parent_category_id == parent_category_id
-            )
+            ).limit(limit)
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)
-            result_orm = result.scalars().all()
+            return result.scalars().all()
 
-            result_dto = []
-            for row in result_orm:
-                subcategories = []
-                
-                for category in row.subcategories:
-                    parent_category = None
-                    if category.parent_category:
-                        parent_category = SCategory(
-                            id=category.parent_category.id,
-                            name=category.parent_category.name
-                        )
-
-                    subcategories.append(SSubcategory(
-                        id=category.id,
-                        name=category.name,
-                        parent_category=parent_category
-                    ))
-
-                product_dto = SProductsList(
-                    id=row.id,
-                    name=row.name,
-                    img=row.img,
-                    subcategories=subcategories
-                )
-                result_dto.append(product_dto)
-
-            return result_dto
         
     @classmethod
     async def search(cls, product_name: str):

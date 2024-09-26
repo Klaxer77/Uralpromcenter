@@ -22,13 +22,11 @@ class SCategory(BaseModel):
 class SSubcategory(BaseModel):
     id: int
     name: str
-    parent_category: SCategory
 
 class SProductsList(BaseModel):
     id: UUID
     name: str
     img: str
-    subcategories: List[SSubcategory] = [] 
     
 class SProductSearch(BaseModel):
     name: str

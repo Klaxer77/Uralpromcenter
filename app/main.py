@@ -8,6 +8,7 @@ from app.recall.router import router as recall_router
 from app.progress.router import router as progress_router
 from app.email.order_call.router import router as ordercall_router
 from app.email.send_request.router import router as sendrequest_router
+from app.products.categories.router import router as categories_router
 from sqladmin import Admin
 from app.database import engine
 from app.admin.auth import authentication_backend
@@ -38,7 +39,6 @@ if settings.MODE == "PROD":
 
 app = FastAPI(
     title="Сайт ASK-BP",
-    root_path="/api",
     openapi_url=openapi_url, 
     redoc_url=redoc_url
     )
@@ -46,6 +46,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.include_router(product_router)
+app.include_router(categories_router)
 app.include_router(news_router)
 app.include_router(recall_router)
 app.include_router(progress_router)
@@ -54,7 +55,9 @@ app.include_router(sendrequest_router)
 app.include_router(auth_user_router)
 
 origins = [
+    "http://localhost:3001",
     "http://localhost:3000",
+    "ws://localhost:3001",
     "ws://localhost:3000",
 ]
 
