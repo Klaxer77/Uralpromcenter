@@ -6,7 +6,7 @@ from app.progress.schemas import ProgressList
 
 #1
 async def test_progress_all(ac: AsyncClient):
-    response = await ac.get("/api/progress/all")
+    response = await ac.get("/progress/all")
     progress = response.json()
     
     assert response.status_code == 200

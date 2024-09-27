@@ -5,5 +5,6 @@ conftest.py
 ./app/conftest.py
 pytest.ini
 .test.env
+.env.prod
 
 grafana-dashboard.json

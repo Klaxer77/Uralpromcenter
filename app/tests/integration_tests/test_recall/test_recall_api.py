@@ -6,7 +6,7 @@ from app.recall.schemas import RecallList
 
 #1
 async def test_recall_all(ac: AsyncClient):
-    response = await ac.get("/api/recall/all")
+    response = await ac.get("/recall/all")
     recall = response.json()
     
     assert response.status_code == 200

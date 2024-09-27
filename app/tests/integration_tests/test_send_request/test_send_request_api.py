@@ -23,7 +23,7 @@ async def test_api_send_request_add(
     status_code:int,
     ac:AsyncClient
 ):
-    response = await ac.post("/api/sendrequest/add", json={
+    response = await ac.post("/sendrequest/add", json={
         "lastname":lastname,
         "firstname_and_surname":firstname_and_surname,
         "number":number,

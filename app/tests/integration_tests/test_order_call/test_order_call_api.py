@@ -12,7 +12,7 @@ from app.exceptions.schemas import SException
     ("Дмитрийфцвввввввввввввввввввввввввввввввввввввввввввввввввввввввввввввввввввввввв","+77825602345","фцвффцвфвфвфцвфцвфвфцвф 4545 4545 аыыуа 556","Слишком много символов в имени",422)
 ])
 async def test_api_order_call_add(name:str,number:str,comment:str,detail:str,status_code:int,ac: AsyncClient):
-    response = await ac.post("/api/callorder/add", json={
+    response = await ac.post("/callorder/add", json={
         "name":name,
         "number":number,
         "comment":comment 

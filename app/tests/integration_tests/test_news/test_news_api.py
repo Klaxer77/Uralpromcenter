@@ -7,7 +7,7 @@ from app.news.schemas import NewsList
 
 #1
 async def test_get_all(ac: AsyncClient):
-    response = await ac.get("/api/news/all")
+    response = await ac.get("/news/all")
     news = response.json()
     
     assert news
