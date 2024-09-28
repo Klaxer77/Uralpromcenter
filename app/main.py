@@ -21,6 +21,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from app.utils.limiter import limiter
 import sentry_sdk
+from fastapi_pagination import add_pagination
 
 openapi_url=None
 redoc_url=None
@@ -44,6 +45,7 @@ app = FastAPI(
     )
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+add_pagination(app)
 
 app.include_router(product_router)
 app.include_router(categories_router)

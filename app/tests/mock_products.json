@@ -2,26 +2,37 @@
     {
         "id": "1364c781-47d0-4d02-8eef-798630816b8e",
         "name": "Продукт1",
+        "description": "desc1",
         "img": "img1"
     },
     {
         "id": "680c7a49-bcbc-4241-8330-788b2f001555",
         "name": "Продукт2",
+        "description": "desc2",
         "img": "img2"
     },
     {
         "id": "3ddbcca3-a5e7-41d1-b722-bea39f2f5178",
         "name": "Продукт3",
+        "description": "desc3",
         "img": "img3"
     },
     {
         "id": "f7834603-ca51-4b66-8d9d-c075629257e3",
         "name": "Продукт4",
+        "description": "desc4",
         "img": "img4"
     },
     {
         "id": "b73f0283-927b-4a5e-b685-24ee66e0dd7b",
         "name": "Продукт5",
+        "description": "desc5",
         "img": "img5"
+    },
+    {
+        "id": "602ed145-2660-4254-af66-1c97a6738551",
+        "name": "Продукт6",
+        "description": "desc6",
+        "img": "img9"
     }
 ]

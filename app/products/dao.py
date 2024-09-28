@@ -23,11 +23,11 @@ class ProductDAO(BaseDAO):
             return result.scalars().all()
         
     @classmethod
-    async def find_many_in_subcategory(cls, subcategory_id: int, limit: int):
+    async def find_many_in_subcategory(cls, subcategory_id: int):
         async with async_session_maker() as session:
             query = select(Products).join(products_categories).where(
                 products_categories.c.category_id == subcategory_id
-                ).limit(limit)
+                )
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)
@@ -35,13 +35,13 @@ class ProductDAO(BaseDAO):
 
             
     @classmethod
-    async def find_many_in_parent_category(cls, parent_category_id: int, limit: int):
+    async def find_many_in_parent_category(cls, parent_category_id: int):
         async with async_session_maker() as session:
             query = select(Products).options(
                 selectinload(Products.subcategories).options(selectinload(Categories.parent_category))
             ).join(products_categories).join(Categories).where(
                 Categories.parent_category_id == parent_category_id
-            ).limit(limit)
+            )
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)

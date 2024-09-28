@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, UUID, Boolean, ForeignKey, Integer, String, Table
+from sqlalchemy import Column, UUID, Boolean, ForeignKey, Integer, String, Table, Text
 from app.database import Base
 from sqlalchemy.orm import relationship, Mapped
 
@@ -17,6 +17,7 @@ class Products(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(255), unique=True, nullable=False)
+    description = Column(Text, nullable=False)
     img = Column(String(255), unique=True, nullable=False)
     
     subcategories = relationship(

@@ -26,6 +26,7 @@ class SSubcategory(BaseModel):
 class SProductsList(BaseModel):
     id: UUID
     name: str
+    description: str
     img: str
     
 class SProductSearch(BaseModel):
