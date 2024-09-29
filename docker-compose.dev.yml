@@ -24,6 +24,27 @@ services:
     ports:
       - 8000:8000
 
+  react:
+    image: klaxer/ask-bp_app_frontend_dev:latest
+    container_name: ask-bp_app_frontend_dev
+    volumes:
+      - react_dist:/app/dist
+    depends_on:
+      - app
+    ports:
+      - 3001:3001
+
+  nginx:
+    build: ./nginx
+    container_name: ask-bp_nginx_dev
+    ports:
+      - 80:80
+    volumes:
+      - react_dist:/app/dist
+    depends_on:
+      - app
+      - react
+
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.3.1
     container_name: ask-bp_node_exporter_dev
@@ -42,6 +63,8 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheusdata:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     restart: unless-stopped
     ports:
       - 9090:9090
@@ -51,6 +74,9 @@ services:
     container_name: ask-bp_grafana_dev
     volumes:
       - grafanadata:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    env_file:
+      - .env.docker
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -58,8 +84,6 @@ services:
   redis:
     image: redis:7
     container_name: ask-bp_redis_dev
-    ports:
-      - 6379:6379
 
   celery:
     image: ask-bp_celery_dev
@@ -77,3 +101,4 @@ volumes:
   postgresdata:
   grafanadata:
   prometheusdata:
+  react_dist:

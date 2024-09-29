@@ -1,0 +1,113 @@
+x-def-logging: &default-logging
+  logging:
+    driver: "loki"
+    options:
+      loki-url: "http://localhost:3100/loki/api/v1/push"
+      loki-batch-size: "100"
+      loki-retries: 2
+      loki-max-backoff: 1000ms
+      loki-timeout: 1s
+
+version: "3.8"
+services:
+  db:
+    image: postgres:15
+    container_name: ask-bp_db_prod
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    env_file:
+      - .env.prod
+    ports:
+      - 5432:5432
+    <<: *default-logging
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ask-bp_app_prod
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+    command: sh -c "sleep 10 && alembic upgrade head && gunicorn app.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    <<: *default-logging
+
+  react:
+    image: klaxer/ask-bp_app_frontend_prod:latest
+    container_name: ask-bp_app_frontend_prod
+    volumes:
+      - react_dist:/app/dist
+    ports:
+      - 3001:3001
+    <<: *default-logging
+
+  nginx:
+    build: ./nginx
+    container_name: ask-bp_nginx_prod
+    ports:
+      - 80:80
+    volumes:
+      - react_dist:/app/dist
+    depends_on:
+      - app
+      - react
+    <<: *default-logging
+
+  loki:
+    image: grafana/loki:latest
+    container_name: ask-bp_loki_dev
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/loki-config.yaml
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.3.1
+    container_name: ask-bp_node_exporter_prod
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+    ports:
+      - "9100:9100"
+  
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: ask-bp_prometheus_prod
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheusdata:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana:11.1.5
+    container_name: ask-bp_grafana_prod
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    env_file:
+      - .env.prod
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+
+  redis:
+    image: redis:7
+    container_name: ask-bp_redis_prod
+    <<: *default-logging
+
+volumes:
+  postgresdata:
+  grafanadata:
+  prometheusdata:
+  react_dist:
