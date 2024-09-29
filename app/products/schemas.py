@@ -23,13 +23,18 @@ class SSubcategory(BaseModel):
     id: int
     name: str
 
-class SProductsList(BaseModel):
+class SProducts(BaseModel):
     id: UUID
     name: str
     description: str
     img: str
     
+class SProductsList(BaseModel):
+    products: list[SProducts]
+    has_more: bool
+    
 class SProductSearch(BaseModel):
+    id: UUID
     name: str
     img: str
 

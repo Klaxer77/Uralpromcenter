@@ -18,39 +18,33 @@ class ProductDAO(BaseDAO):
     @classmethod
     async def search(cls, product_name: str):
         async with async_session_maker() as session:
-            query = select(Products.name, Products.img).where(Products.name.ilike(f"%{product_name}%"))
+            query = select(Products.id, Products.name, Products.img).where(Products.name.ilike(f"%{product_name}%"))
             result = await session.execute(query)
-            return result.scalars().all()
+            return result.mappings().all()
         
     @classmethod
-    async def find_many_in_subcategory(cls, subcategory_id: int):
+    async def find_many_in_subcategory(cls, subcategory_id: int, limit: int):
         async with async_session_maker() as session:
             query = select(Products).join(products_categories).where(
                 products_categories.c.category_id == subcategory_id
-                )
+            ).limit(limit)
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)
-            return result.scalars().all()
+            products = result.scalars().all()
+            
+            return products
 
             
     @classmethod
-    async def find_many_in_parent_category(cls, parent_category_id: int):
+    async def find_many_in_parent_category(cls, parent_category_id: int, limit: int):
         async with async_session_maker() as session:
             query = select(Products).options(
                 selectinload(Products.subcategories).options(selectinload(Categories.parent_category))
             ).join(products_categories).join(Categories).where(
                 Categories.parent_category_id == parent_category_id
-            )
+            ).limit(limit)
             
             logger.debug(query.compile(engine, compile_kwargs={"literal_binds": True}))
             result = await session.execute(query)
             return result.scalars().all()
-
-        
-    @classmethod
-    async def search(cls, product_name: str):
-        async with async_session_maker() as session:
-            query = select(Products.name, Products.img).where(Products.name.ilike(f"%{product_name}%"))
-            result = await session.execute(query)
-            return result.mappings().all()
