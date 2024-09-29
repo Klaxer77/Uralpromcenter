@@ -10,9 +10,11 @@ from app.email.send_request.models import SendRequest  #noqa
 from app.email.order_call.models import OrderCall  #noqa
 from app.progress.models import Progress  #noqa
 from sqlalchemy import insert
+from app.config import settings
 
 
 async def mock_script():
+    assert settings.MODE == "TEST"
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)

@@ -119,17 +119,17 @@ async def test_product_search(product_name: str, is_exists: bool, ac: AsyncClien
     assert response.status_code == 200
     
     if is_exists:
-        assert products  # Проверяем, что продукты возвращены
+        assert products  
         
         for product in products:
             product_data = {
-                "id": product["id"],     # Убедитесь, что здесь есть поле "id"
+                "id": product["id"],     
                 "name": product["name"],
                 "img": product["img"]
             }
             
             try:
-                product_schem = SProductSearch(**product_data)  # Валидация каждого продукта
+                product_schem = SProductSearch(**product_data)  
                 
                 assert isinstance(product_schem.id, UUID)
                 assert isinstance(product_schem.name, str)
@@ -140,3 +140,37 @@ async def test_product_search(product_name: str, is_exists: bool, ac: AsyncClien
 
     else:
         assert products == []
+        
+#4        
+@pytest.mark.parametrize("product_id,if_exists", [
+    ("1364c781-47d0-4d02-8eef-798630816b8e",True),
+    ("680c7a49-bcbc-4241-8330-788b2f001555",True),
+    ("680c7a49-bcbc-4241-8330-788b2f001556",False),
+    ("680c7a49-bcbc-4241-8330-788b2f001557",False),
+])        
+async def test_product_api_detail(product_id: str, if_exists: bool, ac: AsyncClient):
+    response = await ac.get(f"/product/detail/{product_id}")
+    product = response.json()
+    
+    if if_exists:
+        assert product
+        try:
+            product_data = {
+                    "id": product["id"],
+                    "name": product["name"],
+                    "description": product["description"],
+                    "img": product["img"]
+                    }
+            product_schema = SProducts(**product_data)
+            
+            assert isinstance(product_schema.id, UUID)
+            assert isinstance(product_schema.name, str)
+            assert isinstance(product_schema.description, str)
+            assert isinstance(product_schema.img, str)
+            
+        except ValidationError as e:
+                assert False, f"Validation Error: {e}"
+        except TypeError as e:
+                assert False, f"Type Error: {e}"
+    else: 
+        assert product is None

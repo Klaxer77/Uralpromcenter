@@ -98,20 +98,52 @@ async def test_product_search(product_name: str, is_exists: bool):
         assert products
         
         for product in products:
-            product_data = {
-                    "id": product.id,
-                    "name": product.name,
-                    "img": product.img
-                    }
-        
-        product_schem = SProductSearch(**product_data)
-        
-        assert isinstance(product_schem.id, UUID)
-        assert isinstance(product_schem.name, str)
-        assert isinstance(product_schem.img, str)
+            try:
+                product_data = {
+                        "id": product.id,
+                        "name": product.name,
+                        "img": product.img
+                        }
+            
+                product_schem = SProductSearch(**product_data)
+                
+                assert isinstance(product_schem.id, UUID)
+                assert isinstance(product_schem.name, str)
+                assert isinstance(product_schem.img, str)
+            except ValidationError as e:
+                assert False, f"Validation Error: {e}"
+            except TypeError as e:
+                assert False, f"Type Error: {e}"
     
     else:
         assert products == []
+
+#4     
+@pytest.mark.parametrize("product_id,if_exists", [
+    ("1364c781-47d0-4d02-8eef-798630816b8e",True),
+    ("680c7a49-bcbc-4241-8330-788b2f001555",True),
+    ("680c7a49-bcbc-4241-8330-788b2f001556",False),
+    ("680c7a49-bcbc-4241-8330-788b2f001557",False),
+])   
+async def test_product_detail(product_id: UUID,if_exists: bool):
+    product = await ProductDAO.find_one_or_none(id=product_id)
+    
+    if if_exists:
+        assert product
+        try:
+            product_schema = SProducts(**product)
+            
+            assert isinstance(product_schema.id, UUID)
+            assert isinstance(product_schema.name, str)
+            assert isinstance(product_schema.description, str)
+            assert isinstance(product_schema.img, str)
+            
+        except ValidationError as e:
+                assert False, f"Validation Error: {e}"
+        except TypeError as e:
+                assert False, f"Type Error: {e}"
+    else: 
+        assert product is None
         
 
         
