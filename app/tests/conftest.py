@@ -1,5 +1,4 @@
 import asyncio
-from fastapi_pagination import add_pagination
 import pytest
 from app.config import settings
 from httpx import ASGITransport, AsyncClient
@@ -24,9 +23,4 @@ def event_loop(request):
 async def ac():
     async with AsyncClient(transport=ASGITransport(fastapi_app), base_url="http://test") as ac:
         yield ac
-        
-@pytest.fixture(scope="function")
-async def ac_pagination():
-    pagination_app = add_pagination(fastapi_app)
-    async with AsyncClient(transport=ASGITransport(pagination_app), base_url="http://test") as ac_pagination:
-        yield ac_pagination
+    
