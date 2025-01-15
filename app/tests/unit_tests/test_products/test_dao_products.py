@@ -5,6 +5,7 @@ from app.products.schemas import SProductSearch, SProducts, SProductsList, SCate
 from app.products.dao import ProductDAO
 
 #1
+@pytest.mark.asyncio
 @pytest.mark.parametrize("subcategory_id, limit, expected_count, has_more", [
     (1, 1, 1, True), 
     (2, 1, 1, True),  

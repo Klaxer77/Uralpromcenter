@@ -1,20 +1,22 @@
-version: "3.8"
 services:
   db:
     image: postgres:15
-    container_name: ask-bp_db_dev
+    container_name: uralpromcenter_db_dev
     volumes:
       - postgresdata:/var/lib/postgresql/data
     env_file:
       - .env.docker
     ports:
-      - 5432:5432
+      - 6000:5432
+    networks:
+      - app_network
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ask-bp_app_dev
+    image: uralpromcenter_app_dev_image
+    container_name: uralpromcenter_app_dev
     env_file:
       - .env.docker
     depends_on:
@@ -23,82 +25,41 @@ services:
     command: sh -c "sleep 10 && alembic upgrade head && gunicorn app.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"
     ports:
       - 8000:8000
-
-  react:
-    image: klaxer/ask-bp_app_frontend_dev:latest
-    container_name: ask-bp_app_frontend_dev
-    volumes:
-      - react_dist:/app/dist
-    depends_on:
-      - app
-    ports:
-      - 3001:3001
-
-  nginx:
-    build: ./nginx
-    container_name: ask-bp_nginx_dev
-    ports:
-      - 80:80
-    volumes:
-      - react_dist:/app/dist
-    depends_on:
-      - app
-      - react
-
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:v1.3.1
-    container_name: ask-bp_node_exporter_dev
-    command:
-      - '--path.rootfs=/host'
-    pid: host
-    restart: unless-stopped
-    volumes:
-      - '/:/host:ro,rslave'
-    ports:
-      - 9100:9100
-
-  prometheus:
-    image: prom/prometheus:v2.43.0
-    container_name: ask-bp_prometheus_dev
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheusdata:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    restart: unless-stopped
-    ports:
-      - 9090:9090
-
-  grafana:
-    image: grafana/grafana:9.4.7
-    container_name: ask-bp_grafana_dev
-    volumes:
-      - grafanadata:/var/lib/grafana
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-    env_file:
-      - .env.docker
-    restart: unless-stopped
-    ports:
-      - 3000:3000
+    networks:
+      - app_network
 
   redis:
     image: redis:7
-    container_name: ask-bp_redis_dev
+    container_name: uralpromcenter_redis_dev
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    restart: always
+    networks:
+      - app_network
 
   celery:
-    image: ask-bp_celery_dev
+    image: uralpromcenter_celery_dev
     build:
       context: .
-    container_name: ask-bp_celery_dev
+    container_name: uralpromcenter_celery_dev
     command: sh -c "celery --app=app.tasks.celery:celery worker -l INFO"
     env_file:
       - .env.docker
     depends_on:
       - redis
-
+    networks:
+      - app_network
 
 volumes:
   postgresdata:
-  grafanadata:
-  prometheusdata:
-  react_dist:
+  redisdata:
+
+networks:
+  app_network:
+    driver: bridge

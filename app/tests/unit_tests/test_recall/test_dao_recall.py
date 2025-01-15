@@ -6,6 +6,7 @@ from app.recall.schemas import RecallList
 
 
 #1
+@pytest.mark.asyncio
 async def test_recall_all():
     recall = await RecallDAO.find_all()
     

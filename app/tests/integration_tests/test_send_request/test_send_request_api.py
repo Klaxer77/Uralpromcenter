@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-
+@pytest.mark.asyncio
 @pytest.mark.parametrize("lastname,firstname_and_surname,number,organization,email,message,detail,status_code", [
     ("Голузин","Иван Александрович","+79226402325","ООО Крутые","ivan@mail.ru","awdadwaadad adawd adw","Спасибо за заявку! Мы свяжемся с вами в ближайшее время",201),
     ("Петров","Петр Александрович","+79676402378","ООО Крутые2","petr@mail.ru","awdadwaadad 45444adawd adw","Спасибо за заявку! Мы свяжемся с вами в ближайшее время",201),

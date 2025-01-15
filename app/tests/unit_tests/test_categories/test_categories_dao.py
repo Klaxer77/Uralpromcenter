@@ -6,6 +6,7 @@ from app.products.schemas import SSubcategory
 
 
 #1
+@pytest.mark.asyncio
 async def test_get_categories_all():
     categories = await CategoryDAO.get_categories_all()
 

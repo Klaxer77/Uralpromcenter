@@ -5,6 +5,7 @@ from app.recall.schemas import RecallList
 
 
 #1
+@pytest.mark.asyncio
 async def test_recall_all(ac: AsyncClient):
     response = await ac.get("/recall/all")
     recall = response.json()

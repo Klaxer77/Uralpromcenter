@@ -38,10 +38,11 @@ if settings.MODE == "PROD":
 
 
 app = FastAPI(
-    title="Сайт ASK-BP",
+    title="Сайт Uralpromcenter",
     openapi_url=openapi_url, 
     redoc_url=redoc_url
     )
+
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -54,12 +55,12 @@ app.include_router(ordercall_router)
 app.include_router(sendrequest_router)
 app.include_router(auth_user_router)
 
+
 origins = [
-    "http://localhost:3001",
-    "http://localhost:3000",
-    "ws://localhost:3001",
-    "ws://localhost:3000",
+    settings.APP_FRONT_HOST
 ]
+if settings.MODE != "PROD":
+    origins = ["*"]
 
 #Подключение CORS
 app.add_middleware(

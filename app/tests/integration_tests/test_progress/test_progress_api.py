@@ -5,6 +5,7 @@ from app.progress.schemas import ProgressList
 
 
 #1
+@pytest.mark.asyncio
 async def test_progress_all(ac: AsyncClient):
     response = await ac.get("/progress/all")
     progress = response.json()

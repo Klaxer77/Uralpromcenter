@@ -2,7 +2,7 @@ import pytest
 
 from app.email.order_call.dao import OrderCallDAO
 
-
+@pytest.mark.asyncio
 @pytest.mark.parametrize("id,name,number,comment", [
     (5,"Иван","+79226402325","фцвффцвфвфвфцвфцвфвфцвф"),
     (6,"Дмитрий","+77825602325","фцвффцвфвфвфцвфцвфвфцвф 4545 4545 аыыуа 556")

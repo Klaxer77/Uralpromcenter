@@ -6,6 +6,7 @@ from app.news.schemas import NewsList
 
 
 #1
+@pytest.mark.asyncio
 async def test_get_all(ac: AsyncClient):
     response = await ac.get("/news/all")
     news = response.json()
@@ -31,7 +32,8 @@ async def test_get_all(ac: AsyncClient):
     except TypeError as e:
         assert False, f"Type Error: {e}"
         
-#2    
+#2   
+@pytest.mark.asyncio 
 @pytest.mark.parametrize("news_id,if_exists", [
     (1,True),
     (2,True),

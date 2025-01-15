@@ -2,7 +2,7 @@ import pytest
 from httpx import AsyncClient
 from app.exceptions.schemas import SException
 
-
+@pytest.mark.asyncio
 @pytest.mark.parametrize("name,number,comment,detail,status_code", [
     ("Иван","+79226402325","фцвффцвфвфвфцвфцвфвфцвф","Спасибо за заявку! Мы свяжемся с вами в ближайшее время",201),
     ("Иван","+79226402325","фцвффцвфвфвфцвфцвфвфцвф","Спасибо за заявку! Мы свяжемся с вами в ближайшее время",201),

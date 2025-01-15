@@ -2,7 +2,7 @@ import pytest
 
 from app.email.send_request.dao import SendRequestDAO
 
-
+@pytest.mark.asyncio
 @pytest.mark.parametrize("id,lastname,firstname_and_surname,number,organization,email,message", [
     (5,"Голузин","Иван Александрович","+79226402325","ООО Крутые","ivan@mail.ru","awdadwaadad adawd adw"),
     (6,"Петров","Петр Александрович","+79676402378","ООО Крутые2","petr@mail.ru","awdadwaadad 45444adawd adw")

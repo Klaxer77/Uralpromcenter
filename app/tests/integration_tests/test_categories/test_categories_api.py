@@ -4,7 +4,7 @@ from app.products.categories.schemas import SCategoryList
 from httpx import AsyncClient
 
 
-
+@pytest.mark.asyncio
 async def test_get_categories_api_all(ac: AsyncClient):
     response = await ac.get("/category/all")
     categories = response.json()

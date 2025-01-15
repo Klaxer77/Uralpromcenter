@@ -7,7 +7,7 @@ from app.config import settings
 
 logger = logging.getLogger()
 
-logHandler = logging.StreamHandler()
+fileHandler = logging.StreamHandler()
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
@@ -26,6 +26,7 @@ formatter = CustomJsonFormatter(
     "%(timestamp)s %(level)s %(message)s %(module)s %(funcName)s"
 )
 
-logHandler.setFormatter(formatter)
-logger.addHandler(logHandler)
-logger.setLevel(settings.LOG_LEVEL)
+if not settings.MODE == "TEST":
+    fileHandler.setFormatter(formatter)
+    logger.addHandler(fileHandler)
+    logger.setLevel(settings.LOG_LEVEL)

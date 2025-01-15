@@ -7,6 +7,7 @@ from app.products.dao import ProductDAO
 from app.products.schemas import SCategory, SProductSearch, SProducts, SProductsList, SSubcategory
             
 #1
+@pytest.mark.asyncio
 @pytest.mark.parametrize("subcategory_id, limit, expected_count, has_more", [
     (7,1,1,False),
     (1,1,1,True),
@@ -55,6 +56,7 @@ async def test_get_products_in_subcategory(
     assert (len(expected_products) > expected_count) == has_more
         
 #2
+@pytest.mark.asyncio
 @pytest.mark.parametrize("parent_category_id, limit, expected_count, has_more", [
     (5,1,1,True),
     (4,1,1,True),
@@ -102,7 +104,8 @@ async def test_get_products_in_parent_category(
     assert (len(expected_products) > expected_count) == has_more
         
         
-#3       
+#3 
+@pytest.mark.asyncio      
 @pytest.mark.parametrize("product_name,is_exists", [
     ("Продукт1", True),
     ("Продукт2", True),
@@ -141,7 +144,8 @@ async def test_product_search(product_name: str, is_exists: bool, ac: AsyncClien
     else:
         assert products == []
         
-#4        
+#4     
+@pytest.mark.asyncio   
 @pytest.mark.parametrize("product_id,if_exists", [
     ("1364c781-47d0-4d02-8eef-798630816b8e",True),
     ("680c7a49-bcbc-4241-8330-788b2f001555",True),

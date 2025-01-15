@@ -5,6 +5,7 @@ from app.news.dao import NewsDAO
 from app.news.schemas import NewsList
 
 #1
+@pytest.mark.asyncio
 async def test_find_all():
     news_items = await NewsDAO.find_all()
     
@@ -27,6 +28,7 @@ async def test_find_all():
             assert False, f"Type Error: {e}"
             
 #2    
+@pytest.mark.asyncio
 @pytest.mark.parametrize("news_id,if_exists", [
     (1,True),
     (2,True),
