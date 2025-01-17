@@ -57,7 +57,8 @@ app.include_router(auth_user_router)
 
 
 origins = [
-    settings.APP_FRONT_HOST
+    settings.APP_FRONT_HOST,
+    "http://192.168.99.100:3001"
 ]
 if settings.MODE != "PROD":
     origins = ["*"]
@@ -81,13 +82,6 @@ if settings.MODE == "TEST":
 def startup():
     redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}", encoding="utf8", decode_responses=True)
     FastAPICache.init(RedisBackend(redis), prefix="cache")
-    
-# Подключение Прометеуса
-instrumentator = Instrumentator(
-    should_group_status_codes=False,
-    excluded_handlers=[".*admin.*", "/metrics"],
-)
-instrumentator.instrument(app).expose(app)
 
 # Подключение админки
 admin = Admin(app, engine, authentication_backend=authentication_backend)
