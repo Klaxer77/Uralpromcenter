@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   db:
-    image: postgres:15
+    image: postgres:9
     container_name: uralpromcenter_db_dev
     volumes:
       - postgresdata:/var/lib/postgresql/data
