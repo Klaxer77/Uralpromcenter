@@ -9,7 +9,7 @@ services:
     env_file:
       - .env.docker
     ports:
-      - "6000:5432"  # Expose the port to the host machine
+      - "6000:5432" 
     networks:
       - app_network
 
@@ -26,7 +26,7 @@ services:
       - redis
     command: sh -c "sleep 10 && alembic upgrade head && gunicorn app.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"
     ports:
-      - "8000:8000"  # Expose the port to the host machine
+      - "8000:8000" 
     networks:
       - app_network
 

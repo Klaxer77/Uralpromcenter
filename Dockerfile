@@ -9,8 +9,8 @@ ENV PYTHONUNBUFFERED=1
 
 COPY req.txt .
 
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip --no-cache-dir -i https://pypi.org/simple
+RUN pip install -r req.txt --no-cache-dir -i https://pypi.org/simple
 
-RUN pip install -r req.txt
 
 COPY . .
