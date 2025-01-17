@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   db:
     image: postgres:15
@@ -83,8 +85,11 @@ services:
 
 volumes:
   postgresdata:
+    driver: local
   redisdata:
+    driver: local
   react_dist:
+    driver: local
 
 networks:
   app_network:
